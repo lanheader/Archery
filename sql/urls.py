@@ -165,12 +165,13 @@ urlpatterns = [
 ]
 if settings.ENABLE_CAS:
     import django_cas_ng.views
+
     urlpatterns += [
-        path('login/', django_cas_ng.views.LoginView.as_view(), name='cas-login'),
-        path('logout/', django_cas_ng.views.LogoutView.as_view(), name='cas-logout'),
+        path("login/", django_cas_ng.views.LoginView.as_view(), name="cas-login"),
+        path("logout/", django_cas_ng.views.LogoutView.as_view(), name="cas-logout"),
     ]
 else:
     urlpatterns += [
-        path('login/', views.login, name='login'),
-        path('logout/', auth.sign_out),
+        path("login/", views.login, name="login"),
+        path("logout/", auth.sign_out),
     ]
