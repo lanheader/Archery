@@ -56,9 +56,9 @@ class FSMessage(object):
             )
         ).json()
         if response["code"] != 0:
-            return False
+            return None
         if not (
                 response["data"]["user_list"][0]
         ).__contains__('user_id'):
-            return False
+            return None
         return response["data"]["user_list"][0]['user_id']

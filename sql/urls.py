@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 
-import django_cas_ng.views
+
 from django.conf import settings
 from django.urls import path
 from django.views.i18n import JavaScriptCatalog
@@ -164,6 +164,7 @@ urlpatterns = [
     path("user/qrcode/<str:data>/", totp.generate_qrcode),
 ]
 if settings.ENABLE_CAS:
+    import django_cas_ng.views
     urlpatterns += [
         path('login/', django_cas_ng.views.LoginView.as_view(), name='cas-login'),
         path('logout/', django_cas_ng.views.LogoutView.as_view(), name='cas-logout'),
