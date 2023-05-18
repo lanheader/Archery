@@ -173,5 +173,5 @@ if settings.ENABLE_CAS:
 else:
     urlpatterns += [
         path("login/", views.login, name="login"),
-        path("logout/", auth.sign_out),
+        path("logout/", auth.sign_out)
     ]

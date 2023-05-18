@@ -76,6 +76,7 @@ class UserDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
+        depth = 1
         fields = "__all__"
         extra_kwargs = {
             "password": {"write_only": True, "required": False},
@@ -305,6 +306,8 @@ class ExecuteCheckResultSerializer(serializers.Serializer):
 
 
 class WorkflowSerializer(serializers.ModelSerializer):
+    create_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
+
     def to_internal_value(self, data):
         if data.get("run_date_start") == "":
             data["run_date_start"] = None
@@ -322,6 +325,7 @@ class WorkflowSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SqlWorkflow
+        depth = 1
         fields = "__all__"
         read_only_fields = [
             "status",
@@ -527,6 +531,8 @@ class WorkflowLogSerializer(serializers.Serializer):
 
 
 class WorkflowLogListSerializer(serializers.ModelSerializer):
+    operation_time = serializers.DateTimeField(format="%Y-%m-%d %H:%M:%S", required=False, read_only=True)
+
     class Meta:
         model = WorkflowLog
         fields = [

@@ -13,6 +13,7 @@ from .serializers import (
     TwoFAStateSerializer,
 )
 from .pagination import CustomizedPagination
+from rest_framework.permissions import IsAuthenticated
 from .permissions import IsOwner
 from .filters import UserFilter
 from django_redis import get_redis_connection
@@ -27,6 +28,8 @@ from common.utils.ding_api import get_ding_user_id
 import random
 import json
 import time
+from .filters import ResourceGroupFilter
+from rest_framework_simplejwt import authentication
 
 
 class UserList(generics.ListAPIView):
@@ -174,7 +177,7 @@ class ResourceGroupList(generics.ListAPIView):
     """
     列出所有的resourcegroup或者创建一个新的resourcegroup
     """
-
+    filterset_class = ResourceGroupFilter
     pagination_class = CustomizedPagination
     serializer_class = ResourceGroupSerializer
     queryset = ResourceGroup.objects.all().order_by("group_id")
@@ -427,4 +430,16 @@ class TwoFAVerify(views.APIView):
             if SysConfig().get("ding_to_person") is True and "admin" not in engineer:
                 get_ding_user_id(engineer)
 
+        return Response(result)
+
+
+class UserInfo(views.APIView):
+    authentication_classes = [authentication.JWTAuthentication]
+    serializer_class = UserSerializer
+    permissions = [permissions.AllowAny]
+
+    def get(self, request):
+        serializer_obj = self.serializer_class(request.user)
+        data = serializer_obj.data
+        result = {"status": 0, "msg": "ok", "data": data}
         return Response(result)

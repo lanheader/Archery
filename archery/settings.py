@@ -48,7 +48,7 @@ USE_X_FORWARDED_HOST = True
 # 请求限制
 DATA_UPLOAD_MAX_MEMORY_SIZE = 15728640
 
-# Application definition
+# Application definition 权限组
 INSTALLED_APPS = (
     "django.contrib.admin",
     "django.contrib.auth",
@@ -63,12 +63,13 @@ INSTALLED_APPS = (
     "rest_framework",
     "django_filters",
     "drf_spectacular",
+    'rest_framework_simplejwt',
 )
 
 MIDDLEWARE = (
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
+    # "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -195,7 +196,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 # API Framework
 REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+    # "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+    'DEFAULT_RENDERER_CLASSES': (
+        'common.middleware.custom_renderer.CustomRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'EXCEPTION_HANDLER': 'common.middleware.custom_renderer.custom_exception_handler',
     # 鉴权
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
@@ -215,7 +221,6 @@ REST_FRAMEWORK = {
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 5,
 }
-
 # Swagger UI
 SPECTACULAR_SETTINGS = {
     "TITLE": "Archery API",
@@ -227,6 +232,7 @@ SPECTACULAR_SETTINGS = {
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(hours=4),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
+    "UPDATE_LAST_LOGIN": True,
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
@@ -376,11 +382,11 @@ LOGGING = {
         #     'level': 'DEBUG',
         #     'propagate': False
         # },
-        # 'django.request': {  # 打印请求错误堆栈信息，方便开发
-        #     'handlers': ['console', 'default'],
-        #     'level': 'DEBUG',
-        #     'propagate': False
-        # },
+        'django.request': {  # 打印请求错误堆栈信息，方便开发
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False
+        },
     },
 }
 

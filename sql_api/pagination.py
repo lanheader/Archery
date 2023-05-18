@@ -14,9 +14,9 @@ class CustomizedPagination(PageNumberPagination):
         if "PAGE_SIZE" in settings.REST_FRAMEWORK.keys()
         else 20
     )
-    page_query_param = "page"
+    page_query_param = "current"
     page_size_query_param = "size"
-    max_page_size = None
+    max_page_size = 1000
 
     def get_paginated_response(self, data):
         return Response(
